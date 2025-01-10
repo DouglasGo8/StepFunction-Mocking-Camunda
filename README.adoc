@@ -117,7 +117,7 @@ A Manual Task in Camunda represents work that must be done manually, without sys
 - Build a custom interface or integrate with tools like AWS Honeycode or third-party platforms to allow manual intervention.
 Combine this with the Callback Pattern to control workflow progression.
 
-- S3 static HTML/JS can be considered also, to decouple Forms when complex submission is necessary, but we take some considerations such as remote hosting bucket with a link.
+- Static HTML/JS from S3 can also be considered to decouple forms when complex submission is required, but we take some considerations into account, such as a remote hosting bucket with a link.
 
 == Service Task
 
