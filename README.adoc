@@ -20,7 +20,7 @@ The Send Task in Camunda is a type of BPMN (Business Process Model and Notation)
 
 - Sends a specific message to a pre-defined recipient, such as an external service, through mechanisms like _REST, SOAP, or message queues._
 
-==== AWS Step Functions: Equivalent Mechanisms
+==== AWS Step Functions Equivalent
 
 1. *Via AWS Lambda*:
 
@@ -47,7 +47,7 @@ AWS Step Functions #*does not have a direct equivalent of the "Receive Task" cap
 
 - *In Camunda*, a *Receive Task* is a BPMN element that waits for an external event or message to proceed. It is commonly used in workflows where an external system needs to signal the process to move forward.
 
-==== AWS Step Functions: Equivalent Mechanisms
+==== AWS Step Functions Equivalent
 
 . *Task with Callback Pattern*: You can define a task in Step Functions that waits for an external system to send a TaskToken back to the Step Functions workflow. This is achieved using *Amazon SNS, SQS, or a custom integration.*
 
@@ -69,7 +69,7 @@ State Machine on Step Function side can be implemented by poll for external sign
 
 - *BPMN Compliance*: Camunda provides a full BPMN implementation, allowing complex workflows involving human interaction, decision-making, and system processes.
 
-==== AWS Step Functions
+==== AWS Step Functions Equivalent
 
 - *No Native User Task Concept*: Step Functions focuses on orchestrating serverless workflows and does not have built-in user task management features. It's designed for system-to-system interactions rather than human workflow management.
 
@@ -250,7 +250,7 @@ IMPORTANT: AWS Step Function uses https://docs.aws.amazon.com/step-functions/lat
 
 In BPMN, the Exclusive Gateway allows for conditional branching. It evaluates the defined conditions and directs the process flow along the first sequence flow that meets the condition
 
-==== AWS Step Functions Choice State
+==== AWS Step Functions Equivalent
 
 The Choice state in AWS Step Functions serves a similar purpose based on _JSON-Path Expression_
 
