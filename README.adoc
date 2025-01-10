@@ -53,6 +53,72 @@ AWS Step Functions #*does not have a direct equivalent of the "Receive Task" cap
 
 . *Wait State with Polling*: Use a Wait State to delay for a set duration, followed by a task that polls an external system or database for the required event or signal. *_(Thread Sleep Java)_*
 
+== User Task
+
+image:./thumbs/camunda/UserTask.png[,role=left]
+
+AWS Step Functions #*does not natively support user tasks*# in the same way as Camunda or another Business Process Model and Notation (BPMN)-compliant platforms.
+
+Possible Workarounds: State Machine Signals, Wait or Task, SWF Integration with limitations,
+
+State Machine on Step Function side can be implemented by poll for external signals (e.g., DynamoDB, S3, or API Gateway) that a user has completed a task.
+
+==== Camunda User Task Capability
+
+- *User Tasks*: Camunda includes a concept of "user tasks" where tasks are explicitly assigned to a person or group of people. These tasks appear in a task list or workbench where users can claim, execute, and complete them manually.
+
+- *BPMN Compliance*: Camunda provides a full BPMN implementation, allowing complex workflows involving human interaction, decision-making, and system processes.
+
+==== AWS Step Functions
+
+- *No Native User Task Concept*: Step Functions focuses on orchestrating serverless workflows and does not have built-in user task management features. It's designed for system-to-system interactions rather than human workflow management.
+
+- *Integration with Other Services*: To mimic user task functionality in Step Functions, you can integrate with other services:
+.. Amazon SQS/SNS: Send a notification to a queue or topic for a user to process.
+
+.. Amazon EventBridge: Route events to services that involve users, like Lambda functions triggering notifications.
+
+.. External User Management: Use external systems, such as a custom UI, to handle user tasks and send status updates back to Step Functions.
+
+== Manual Task
+
+image:./thumbs/camunda/ManualTask.png[,role=left]
+
+AWS Step Functions #*does not have a direct equivalent of Camunda's Manual Task capability*#, but it can achieve similar functionality through creative use of its state machine design.
+
+==== Camunda Manual Task Capability
+
+A Manual Task in Camunda represents work that must be done manually, without system involvement. It is essentially a placeholder in the workflow that waits for human interaction or external confirmation.
+
+==== Step Function Manual Task Equivalent
+
+. *Wait State*
+
+- Use the Wait state to pause execution for a specific duration while waiting for an external event.
+
+- This is static and time-bound, so it's suitable only if you know the maximum expected time for the manual task.
+
+. *Callback with Task Token*:
+
+- Use an `Activity` or a `Callback Pattern` with a Task Token.
+
+- The workflow execution is paused at the task state until an external system (or a human) completes the task and sends a `SendTaskSuccess` or `SendTaskFailure` signal using the Task Token.
+
+- This is the closest equivalent to a manual task in Step Functions, as it allows indefinite waiting and dynamic resumption.
+
+. *Integration with External Systems*:
+
+- Use AWS services like Amazon SQS, Amazon SNS, or Amazon EventBridge to notify humans or systems about the task.
+
+- Once the manual task is completed, the external system can invoke the Step Functions API to continue the workflow.
+
+. *Custom UI for Human Intervention*:
+
+- Build a custom interface or integrate with tools like AWS Honeycode or third-party platforms to allow manual intervention.
+Combine this with the Callback Pattern to control workflow progression.
+
+- S3 static HTML/JS can be considered also, to decouple Forms when complex submission is necessary, but we take some considerations such as remote hosting bucket with a link.
+
 == Service Task
 
 image::./thumbs/camunda/ServiceTask.png[, role=left]
@@ -193,3 +259,11 @@ The Choice state in AWS Step Functions serves a similar purpose based on _JSON-P
 - Each condition is evaluated in order, and the workflow follows the first matching branch.
 
 - If no conditions match, you can define a Default state to handle unanticipated scenarios.
+
+== Link Intermediate Throw Event
+
+== Link Intermediate Catch Event
+
+== Timer Boundary Event (NoN Interrupting)
+
+== Step Function Versioning
