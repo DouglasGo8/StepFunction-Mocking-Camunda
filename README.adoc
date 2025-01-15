@@ -6,9 +6,11 @@ IMPORTANT: Step Functions are primarily used for orchestrating AWS services and 
 
 image::./thumbs/camunda/SendTask.png[, role=left]
 
-AWS Step Functions have built-in Service task capability, but they have differences, including their ability to send tasks or integrate with external systems
+*Yes*, AWS Step Functions have built-in Service task capability, but they have differences, including their ability to send tasks or integrate with external systems
 
-==== Camunda's Send Task
+'''
+
+=== Camunda's Send Task
 
 The Send Task in Camunda is a type of BPMN (Business Process Model and Notation) task used to send a message to an external system or service during a workflow
 
@@ -20,7 +22,7 @@ The Send Task in Camunda is a type of BPMN (Business Process Model and Notation)
 
 - Sends a specific message to a pre-defined recipient, such as an external service, through mechanisms like _REST, SOAP, or message queues._
 
-==== AWS Step Functions Equivalent
+=== AWS Step Functions Equivalent
 
 1. *Via AWS Lambda*:
 
@@ -41,13 +43,15 @@ The Send Task in Camunda is a type of BPMN (Business Process Model and Notation)
 
 image::./thumbs/camunda/ReceiveTask.png[, role=left]
 
-AWS Step Functions #*does not have a direct equivalent of the "Receive Task" capability in Camunda BPMN*#. However, you can achieve similar functionality in Step Functions using a combination of its features.
+*No*, AWS Step Functions #*does not have a direct equivalent of the "Receive Task" capability in Camunda BPMN*#. However, you can achieve similar functionality in Step Functions using a combination of its features.
 
-==== Camunda's Receive Task
+'''
+
+=== Camunda's Receive Task
 
 - *In Camunda*, a *Receive Task* is a BPMN element that waits for an external event or message to proceed. It is commonly used in workflows where an external system needs to signal the process to move forward.
 
-==== AWS Step Functions Equivalent
+=== AWS Step Functions Equivalent
 
 . *Task with Callback Pattern*: You can define a task in Step Functions that waits for an external system to send a TaskToken back to the Step Functions workflow. This is achieved using *Amazon SNS, SQS, or a custom integration.*
 
@@ -57,19 +61,21 @@ AWS Step Functions #*does not have a direct equivalent of the "Receive Task" cap
 
 image:./thumbs/camunda/UserTask.png[,role=left]
 
-AWS Step Functions #*does not natively support user tasks*# in the same way as Camunda or another Business Process Model and Notation (BPMN)-compliant platforms.
+*No*, AWS Step Functions #*does not natively support user tasks*# in the same way as Camunda or another Business Process Model and Notation (BPMN)-compliant platforms.
 
 Possible Workarounds: State Machine Signals, Wait or Task, SWF Integration with limitations,
 
 State Machine on Step Function side can be implemented by poll for external signals (e.g., DynamoDB, S3, or API Gateway) that a user has completed a task.
 
-==== Camunda User Task Capability
+'''
+
+=== Camunda User Task Capability
 
 - *User Tasks*: Camunda includes a concept of "user tasks" where tasks are explicitly assigned to a person or group of people. These tasks appear in a task list or workbench where users can claim, execute, and complete them manually.
 
 - *BPMN Compliance*: Camunda provides a full BPMN implementation, allowing complex workflows involving human interaction, decision-making, and system processes.
 
-==== AWS Step Functions Equivalent
+=== AWS Step Functions Equivalent
 
 - *No Native User Task Concept*: Step Functions focuses on orchestrating serverless workflows and does not have built-in user task management features. It's designed for system-to-system interactions rather than human workflow management.
 
@@ -84,13 +90,15 @@ State Machine on Step Function side can be implemented by poll for external sign
 
 image:./thumbs/camunda/ManualTask.png[,role=left]
 
-AWS Step Functions #*does not have a direct equivalent of Camunda's Manual Task capability*#, but it can achieve similar functionality through creative use of its state machine design.
+*No*, AWS Step Functions #*does not have a direct equivalent of Camunda's Manual Task capability*#, but it can achieve similar functionality through creative use of its state machine design.
 
-==== Camunda Manual Task Capability
+'''
+
+=== Camunda Manual Task Capability
 
 A Manual Task in Camunda represents work that must be done manually, without system involvement. It is essentially a placeholder in the workflow that waits for human interaction or external confirmation.
 
-==== Step Function Manual Task Equivalent
+=== Step Function Manual Task Equivalent
 
 . *Wait State*
 
@@ -112,18 +120,27 @@ A Manual Task in Camunda represents work that must be done manually, without sys
 
 - Once the manual task is completed, the external system can invoke the Step Functions API to continue the workflow.
 
-. *Custom UI for Human Intervention*:
+==== Custom UI for Human Intervention
 
-- Build a custom interface or integrate with tools like AWS Honeycode or third-party platforms to allow manual intervention.
-Combine this with the Callback Pattern to control workflow progression.
+- *Human Task Handling*: AWS Step Functions does not have direct support for human task management or custom forms, and to overcome this limitation, we can use SNS notify humans or trigger external workflows, based on Emails, or AWS Amazon Mechanical Turk, AWS Lambda, or even custom APIs can handle human input tasks, *but you need to build the form UI externally*;
+
+On one hand, Camunda is designed as a BPM platform tailored for complex workflows, supporting both automated and human tasks, along with custom forms that integrate seamlessly for user input, making it a more cohesive choice for human-centric workflows. On the other hand, Step Functions can achieve similar features with additional development efforts
+
+We can think as below presented, in *_custom fronted_*, based on Web (S3, EC2) or Mobile Apps, or using Task Tokens to allow them to wait for external human input before proceeding.
 
 - Static HTML/JS from S3 can also be considered to decouple forms when complex submission is required, but we take some considerations into account, such as a remote hosting bucket with a link.
+
+image::thumbs/stepfunction/customforms-onSF.png[,]
+
+Having this in mind, we can conclude that; *Yes*, it is possible to use custom forms with human tasks in AWS Step Functions, but it requires integration with additional services because AWS Step Functions itself does not natively provide a user interface for human tasks.
+
+We can store form templates in *Amazon S3* which is responsible for fetch form data in HTML mode, wait for *Lambda or API GTW responses*, and after an HT is paused, we can *_Resume the Execution_* once response is received
 
 == Service Task
 
 image::./thumbs/camunda/ServiceTask.png[, role=left]
 
-AWS Step Functions does not have a direct "Service Task" concept, but offers somewhat similar capability, but they #*differ significantly in terms of design and features*#.
+*No*, AWS Step Functions does not have a direct "Service Task" concept, but offers somewhat similar capability, but they #*differ significantly in terms of design and features*#.
 
 Service Task in Camunda take the full benefits and capabilities from Java Spring SDK, for example, to make a S3 API we can use https://spring.io/projects/spring-cloud-aws[Spring Cloud AWS]
 
@@ -186,7 +203,7 @@ image::./thumbs/stepfunction/custom-error-handling-sm.png[,]
 
 image::./thumbs/camunda/ExclusiveGateway.png[,role=left]
 
-AWS Step Functions #*does not have a direct equivalent to the Exclusive Gateway*# capability found in Camunda's BPMN modeling. However, it provides functionality #*to achieve similar outcomes through its Choice state.*#
+*Yes*, AWS Step Functions #*have an equivalent to the Exclusive Gateway*# capability found in Camunda's BPMN modeling. However, it provides functionality #*to achieve similar outcomes through its Choice state.*#
 
 IMPORTANT: AWS Step Function uses https://docs.aws.amazon.com/step-functions/latest/dg/concepts-amazon-states-language.html[Amazon States Language], its own language expression capability
 
@@ -295,7 +312,7 @@ _This is an equivalent Step Function Feature_
 - *User-Friendly UI*: A robust web interface designed for business users and developers to interact with processes.
 
 image::./thumbs/icons/negative.png[30, 30, role=left]
-_Step Function doesn't provide User-Friendly UI to Busines users, it's Limited to AWS Console for insights—there isn’t a sophisticated dashboard like Camunda Cockpit._
+_Step Function doesn't provide User-Friendly UI to Business users, it's Limited to AWS Console for insights—there isn’t a sophisticated dashboard like Camunda Cockpit._
 
 ==== AWS Step Functions Equivalent
 
@@ -350,6 +367,99 @@ Step Function doesn't have built-in version management in the way that you might
 
 == Link Intermediate Throw Event
 
+*No*, AWS Step Functions does not have a direct equivalent to the "Link Intermediate Throw Event" found in Camunda
+
+==== Camunda's Feature
+
+*No*, Step Functions don't have a similar feature, Step Function was designed for orchestrating distributed (AWS) applications and does not support BPMN-style elements, to achieve this using the Step function we need to spend more effort
+
+LINK Intermediate Throw Event is used to connect different parts of a process model without creating a physical sequence flow between them, often for readability or modularity purposes in large workflows.
+
+==== AWS Step Functions Equivalent
+
+* *Feature*:
+
+* *Using States to Modularize Workflow*
+
+- You can break a large Step Functions workflow into smaller, modular workflows and invoke them using the `StartExecution API` (via a Task state).
+
+- This is analogous to linking workflows indirectly; we can use the same idea to express reusability, but using other Cloud Resources such as Lambda, EventBridge
+
+
 == Link Intermediate Catch Event
 
+*No*, AWS Step Functions does not have a direct equivalent to the "Link Intermediate Catch Event" found in Camunda
+
+==== Camunda's Feature
+
+- This Camunda's construction is used to model a "logical jump" within a process flow, enabling you to connect different parts of the process without requiring explicit transitions between them.
+
+- It simplifies complex diagrams by allowing reusable and modular connections between process elements.
+
+==== AWS Step Functions Equivalent
+
+* *Choice States*:
+
+- *Step Functions` Choice*: state allows you to define conditional paths based on input data. While not a direct jump, it enables dynamic routing within a workflow.
+
+- *Task States with Lambda Functions*: You can use AWS Lambda functions to implement reusable logic or decide dynamically which state to transition to next.
+
+- *Nested Workflows*: You can invoke nested workflows (Step Functions within Step Functions) to modularize and reuse logic across workflows.
+
+- *Error Handling with Catch and Retry*: The Catch field in Step Functions provides error-handling capabilities. Although this is primarily for exception handling, it can also redirect execution flow when specific errors occur.
+
+- *Dynamic Input and Output Passing*: Step Functions can pass data dynamically between states, allowing you to emulate flexible transitions by configuring the Next field programmatically.
+
+.Brief Comparison
+[%header,cols=3*]
+|===
+|Feature
+|Camunda (BPMN)
+|Step Function
+
+|Link Intermediate Catch Event
+|Yes
+|No (can be emulated dynamically)
+
+|Conditional Routing
+|Yes (via Gateways)
+|Yes (via Choice states)
+
+|Modularity and Reusability
+|Yes (via Call Activities)
+|Yes (via Nested Workflows)
+
+|Error Handling and Compensation
+|Yes
+|Yes
+
+|===
+
 == Timer Boundary Event (NoN Interrupting)
+
+*No*, AWS Step Functions does not have an out-of-the-box equivalent to Timer Boundary Events from Camunda, but we can achieve similar functionality using a combination of Step Functions features and AWS services.
+
+
+==== Camunda's Feature
+
+Timer Boundary Event is attached to a task and *triggers after a specific time without interrupting the main process flow*. The process continues to execute the primary task while the timer triggers an additional flow, based in this trigger decision or tasks will be assumed, taking the flow in a different flow.
+
+==== AWS Step Functions Equivalent
+
+We can achieve this in SF, using similar concepts
+
+* *Parallel State*:
+
+- *Use a Parallel state* to simulate concurrent execution.
+
+- *Dynamic Wait State* with `Wait` state with the `Timestamp` field.
+
+- *Compute the wait time dynamically* before triggering the state machine.
+
+- *Event-Driven Timer*: Using EventBridge for asynchronous timer events.
+
+==== Limitations
+
+- *No direct attachment to a task*: Unlike Camunda, where timers are visually and semantically bound to a specific task, AWS Step Functions requires manual design of parallel flows.
+
+- *Complexity*: Simulating Camunda's non-interrupting boundary timer increases the complexity of the workflow definition.
